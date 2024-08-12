@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Translator</title>
+</head>
+<body>
+    <h1>Translate Text</h1>
+    <form id="translateForm">
+        <label for="text">Text to Translate:</label><br>
+        <textarea id="text" name="text" rows="4" cols="50"></textarea><br><br>
+        <label for="target_language">Target Language:</label><br>
+        <input type="text" id="target_language" name="target_language"><br><br>
+        <button type="submit">Translate</button>
+    </form>
+    <h2>Translated Text:</h2>
+    <p id="translatedText"></p>
+
+    <script>
+        document.getElementById('translateForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const text = document.getElementById('text').value;
+            const targetLanguage = document.getElementById('target_language').value;
+
+            const response = await fetch('/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text, target_language: targetLanguage })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                document.getElementById('translatedText').innerText = result.translated_text;
+            } else {
+                document.getElementById('translatedText').innerText = 'Error: ' + result.error;
+            }
+        });
+    </script>
+</body>
+</html>
